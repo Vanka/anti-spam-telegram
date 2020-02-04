@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
 	tgbotapi "github.com/Syfaro/telegram-bot-api"
 	"log"
+	"net"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -18,6 +21,11 @@ func main() {
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 6000
+
+	_, err = net.Listen("tcp", ":" + os.Getenv("PORT"))
+	if err != nil {
+		fmt.Println("Error listening:", err.Error())
+	}
 
 	updates, err := bot.GetUpdatesChan(u)
 
@@ -38,4 +46,5 @@ func main() {
 		lastMessage = update.Message
 
 	}
+
 }
