@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="edccc8aa-91c6-4046-a802-a9a867f171b0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
@@ -62,6 +61,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="179" key="#Go_Modules_(vgo)/0.0.1920.1040@0.0.1920.1040" timestamp="1580837658279" />
+    <state x="723" y="324" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1580889320707">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="723" y="324" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1580889320707" />
     <state x="681" y="261" width="540" height="524" key="StructurePopup" timestamp="1580839685844">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

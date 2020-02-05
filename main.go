@@ -1,33 +1,22 @@
 package main
 
 import (
-	"fmt"
 	tgbotapi "github.com/Syfaro/telegram-bot-api"
 	"log"
-	"net"
 	"net/http"
 	"os"
 )
 
 func main() {
 	var lastMessage *tgbotapi.Message
-	bot, err := tgbotapi.NewBotAPIWithClient("954724330:AAH7XJVLIOUveij2XTNr6IJgnAuvviZg49c", &http.Client{})
+	bot, err := tgbotapi.NewBotAPI("954724330:AAH7XJVLIOUveij2XTNr6IJgnAuvviZg49c")
 	if err != nil {
 		log.Panic(err)
 	}
 	bot.Debug = true
-
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 6000
-
-	_, err = net.Listen("tcp", ":" + os.Getenv("PORT"))
-	if err != nil {
-		fmt.Println("Error listening:", err.Error())
-	}
-
-	updates, err := bot.GetUpdatesChan(u)
+	updates := fetchUpdates(bot)
 
 	for update := range updates {
 		if update.Message == nil { // ignore any non-Message Updates
@@ -37,7 +26,7 @@ func main() {
 		log.Printf("[%s][%d] %s", update.Message.From.UserName, update.Message.Date, update.Message.Text)
 
 		if lastMessage != nil && update.Message.Date - lastMessage.Date < 3 && lastMessage.From.UserName == update.Message.From.UserName {
-			messageText := "@" + update.Message.From.UserName + ", сука, задолбал спамить!"
+			messageText := "@" + getUserName(update.Message.From) + ", сука, задолбал спамить!"
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, messageText)
 			msg.ReplyToMessageID = update.Message.MessageID
 
@@ -47,4 +36,28 @@ func main() {
 
 	}
 
+	go http.ListenAndServe(":" + os.Getenv("PORT"), nil)
+	log.Printf("Http Listener switched on port %s", os.Getenv("PORT"))
+}
+
+func fetchUpdates(bot *tgbotapi.BotAPI) tgbotapi.UpdatesChannel {
+	_, err := bot.SetWebhook(tgbotapi.NewWebhook("https://anti-peedrila.herokuapp.com/" + bot.Token))
+	if err != nil {
+		log.Panic(err)
+	}
+
+	updates := bot.ListenForWebhook("/" + bot.Token)
+
+	return updates
+}
+
+func getUserName(user *tgbotapi.User) string {
+	var result string
+
+	if len(user.UserName) > 0 {
+		result += user.UserName
+	} else {
+		result += user.FirstName + " " + user.LastName
+	}
+	return result
 }
