@@ -18,7 +18,7 @@ func main() {
 
 	go http.ListenAndServe(":" + os.Getenv("PORT"), nil)
 	log.Printf("Http Listener switched on port %s", os.Getenv("PORT"))
-	
+
 	updates := fetchUpdates(bot)
 
 	for update := range updates {
@@ -29,9 +29,8 @@ func main() {
 		log.Printf("[%s][%d] %s", update.Message.From.UserName, update.Message.Date, update.Message.Text)
 
 		if lastMessage != nil && update.Message.Date - lastMessage.Date < 3 && lastMessage.From.UserName == update.Message.From.UserName {
-			messageText := "@" + getUserName(update.Message.From) + ", сука, задолбал спамить!"
+			messageText := getUserName(update.Message.From) + ", прекрати, пожалуйста спамить!"
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, messageText)
-			msg.ReplyToMessageID = update.Message.MessageID
 
 			bot.Send(msg)
 		}
@@ -56,7 +55,7 @@ func getUserName(user *tgbotapi.User) string {
 	var result string
 
 	if len(user.UserName) > 0 {
-		result += user.UserName
+		result += "@" + user.UserName
 	} else {
 		result += user.FirstName + " " + user.LastName
 	}
