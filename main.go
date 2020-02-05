@@ -16,6 +16,9 @@ func main() {
 	bot.Debug = true
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
+	go http.ListenAndServe(":" + os.Getenv("PORT"), nil)
+	log.Printf("Http Listener switched on port %s", os.Getenv("PORT"))
+	
 	updates := fetchUpdates(bot)
 
 	for update := range updates {
@@ -36,8 +39,6 @@ func main() {
 
 	}
 
-	go http.ListenAndServe(":" + os.Getenv("PORT"), nil)
-	log.Printf("Http Listener switched on port %s", os.Getenv("PORT"))
 }
 
 func fetchUpdates(bot *tgbotapi.BotAPI) tgbotapi.UpdatesChannel {
