@@ -58,7 +58,7 @@ func processMessage(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
 
 	stat := stats[user]
 	log.Printf("Stats for %s before processing:", getUserName(stat.User))
-	log.Printf("LastMessage stack length: %d. First message: [%d] '%s'gi. Last message: [%d] '%s'", len(stat.LastMessages), stat.LastMessages[0].Date, stat.LastMessages[0].Text, message.Date, message.Text)
+	log.Print(stat)
 
 	if len(message.Text) > 0 {
 		if len(stat.LastMessages) == 4 && message.Date - stat.LastMessages[0].Date < 30 {
