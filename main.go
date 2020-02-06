@@ -61,7 +61,7 @@ func processMessage(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
 	log.Print(stat)
 
 	if len(message.Text) > 0 {
-		if len(stat.LastMessages) == 4 && message.Date - stat.LastMessages[0].Date < 30 {
+		if len(stat.LastMessages) > 4 && message.Date - stat.LastMessages[0].Date < 30 {
 			stat.registerPenalty()
 			msg := tgbotapi.NewMessage(message.Chat.ID, stat.prepareMessage())
 			bot.Send(msg)
