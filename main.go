@@ -56,17 +56,22 @@ func processMessage(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
 	}
 
 	stat := stats[user]
+	log.Print("Stat for user is found")
+	log.Print(stat)
 
 	if len(message.Text) > 0 {
 		if len(stat.LastMessages) == 4 && message.Date - stat.LastMessages[0].Date < 30 {
 			stat.registerPenalty()
 			msg := tgbotapi.NewMessage(message.Chat.ID, stat.prepareMessage())
 			bot.Send(msg)
+		} else {
+			stat.increaseReputation()
 		}
 		stack := addMessageToStack(stat.LastMessages, *message)
 		stat.LastMessages = stack
 	}
-
+	log.Print("User stat after processing:")
+	log.Print(stat)
 }
 
 func addMessageToStack(stack []tgbotapi.Message, message tgbotapi.Message) []tgbotapi.Message{
