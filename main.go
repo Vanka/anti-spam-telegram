@@ -73,6 +73,7 @@ func processMessage(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
 	}
 	log.Printf("Stats for %s after processing:", getUserName(stat.User))
 	log.Printf("LastMessage stack length: %d. First message: [%d] %s. Last message: [%d] %s", len(stat.LastMessages), stat.LastMessages[0].Date, stat.LastMessages[0].Text, message.Date, message.Text)
+	stats[user] = stat
 }
 
 func addMessageToStack(stack []tgbotapi.Message, message tgbotapi.Message) []tgbotapi.Message{
