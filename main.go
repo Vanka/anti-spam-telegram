@@ -10,6 +10,7 @@ import (
 var stats map[tgbotapi.User]UserStat
 
 func main() {
+	stats = make(map[tgbotapi.User]UserStat)
 	bot, err := tgbotapi.NewBotAPI("954724330:AAH7XJVLIOUveij2XTNr6IJgnAuvviZg49c")
 	if err != nil {
 		log.Panic(err)
@@ -45,16 +46,16 @@ func fetchUpdates(bot *tgbotapi.BotAPI) tgbotapi.UpdatesChannel {
 }
 
 func processMessage(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
-	user := message.From
-	if _, ok := stats[*user]; ok {} else {
-		stats[*user] = UserStat{
-			User:             *user,
+	user := *message.From
+	if _, ok := stats[user]; ok {} else {
+		stats[user] = UserStat{
+			User:             user,
 			RelationshipRate: 1,
 			Penalties:		  0,
 		}
 	}
 
-	stat := stats[*user]
+	stat := stats[user]
 
 	if len(message.Text) > 0 {
 		if len(stat.LastMessages) == 4 && message.Date - stat.LastMessages[0].Date < 30 {
