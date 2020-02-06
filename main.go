@@ -7,8 +7,9 @@ import (
 	"os"
 )
 
+var stats map[tgbotapi.User]UserStat
+
 func main() {
-	var lastMessage *tgbotapi.Message
 	bot, err := tgbotapi.NewBotAPI("954724330:AAH7XJVLIOUveij2XTNr6IJgnAuvviZg49c")
 	if err != nil {
 		log.Panic(err)
@@ -27,15 +28,7 @@ func main() {
 		}
 
 		log.Printf("[%s][%d] %s", update.Message.From.UserName, update.Message.Date, update.Message.Text)
-
-		if lastMessage != nil && update.Message.Date - lastMessage.Date < 3 && lastMessage.From.UserName == update.Message.From.UserName {
-			messageText := getUserName(update.Message.From) + ", прекрати, пожалуйста спамить!"
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, messageText)
-
-			bot.Send(msg)
-		}
-		lastMessage = update.Message
-
+		processMessage(update.Message, bot)
 	}
 
 }
@@ -51,13 +44,34 @@ func fetchUpdates(bot *tgbotapi.BotAPI) tgbotapi.UpdatesChannel {
 	return updates
 }
 
-func getUserName(user *tgbotapi.User) string {
-	var result string
-
-	if len(user.UserName) > 0 {
-		result += "@" + user.UserName
-	} else {
-		result += user.FirstName + " " + user.LastName
+func processMessage(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
+	user := message.From
+	if _, ok := stats[*user]; ok {} else {
+		stats[*user] = UserStat{
+			User:             *user,
+			RelationshipRate: 1,
+			Penalties:		  0,
+		}
 	}
-	return result
+
+	stat := stats[*user]
+
+	if len(message.Text) > 0 {
+		if len(stat.LastMessages) == 4 && message.Date - stat.LastMessages[0].Date < 30 {
+			stat.registerPenalty()
+			msg := tgbotapi.NewMessage(message.Chat.ID, stat.prepareMessage())
+			bot.Send(msg)
+		}
+		stack := addMessageToStack(stat.LastMessages, *message)
+		stat.LastMessages = stack
+	}
+
+}
+
+func addMessageToStack(stack []tgbotapi.Message, message tgbotapi.Message) []tgbotapi.Message{
+	if len(stack) > 4 {
+		stack = stack[1:]
+	}
+	stack = append(stack, message)
+	return stack
 }
