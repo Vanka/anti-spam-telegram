@@ -62,11 +62,12 @@ func processMessage(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
 
 	if len(message.Text) > 0 {
 		if len(stat.LastMessages) > 4 && message.Date - stat.LastMessages[0].Date < 30 {
-			stat.registerPenalty()
+			stat.Penalties += 1
+			stat.RelationshipRate *= 0.8
 			msg := tgbotapi.NewMessage(message.Chat.ID, stat.prepareMessage())
 			bot.Send(msg)
 		} else {
-			stat.increaseReputation()
+			stat.RelationshipRate *= 1.2
 		}
 		stack := addMessageToStack(stat.LastMessages, *message)
 		stat.LastMessages = stack
