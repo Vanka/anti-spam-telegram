@@ -18,6 +18,14 @@ func (stat UserStat) increaseReputation() {
 	stat.RelationshipRate *= 1.2
 }
 
+func (stat UserStat) lastMessage() *tgbotapi.Message {
+	messageSize := len(stat.LastMessages)
+	if messageSize > 0 {
+		return &stat.LastMessages[messageSize - 1]
+	}
+	return nil
+}
+
 func (stat UserStat) prepareMessage() string {
 	var ask string
 	if stat.RelationshipRate > 0.8 {

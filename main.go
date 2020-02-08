@@ -61,7 +61,7 @@ func processMessage(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
 	log.Print(stat)
 
 	if len(message.Text) > 0 {
-		if len(stat.LastMessages) > 4 && (message.Date - stat.LastMessages[0].Date < 30 || message.Date - stat.LastMessages[len(stat.LastMessages)-1].Date < 3) {
+		if len(stat.LastMessages) > 4 && message.Date - stat.LastMessages[0].Date < 30 || message.Date - stat.lastMessage().Date < 3 {
 			stat.Penalties += 1
 			stat.RelationshipRate *= 0.5
 			msg := tgbotapi.NewMessage(message.Chat.ID, stat.prepareMessage())
