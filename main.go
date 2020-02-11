@@ -21,7 +21,7 @@ func main() {
 	bot.Debug = true
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-	http.ListenAndServe(":" + appPort, nil)
+	go http.ListenAndServe(":" + appPort, nil)
 	log.Printf("Http Listener switched on port %s", os.Getenv("PORT"))
 
 	updates := fetchUpdates(bot)
