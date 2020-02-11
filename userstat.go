@@ -38,7 +38,7 @@ func (stat UserStat) prepareMessage() string {
 		ask = "заебал, пиздуй-ка ты нахуй со своим спамом!"
 	}
 
-	return getUserName(stat.User) + "," + ask;
+	return getUserName(stat.User) + ", " + ask;
 }
 
 func getUserName(user tgbotapi.User) string {

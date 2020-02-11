@@ -10,15 +10,18 @@ import (
 var stats map[tgbotapi.User]UserStat
 
 func main() {
+	appPort := os.Getenv("PORT")
+	botToken := os.Getenv("BOTTOKEN")
+
 	stats = make(map[tgbotapi.User]UserStat)
-	bot, err := tgbotapi.NewBotAPI("954724330:AAH7XJVLIOUveij2XTNr6IJgnAuvviZg49c")
+	bot, err := tgbotapi.NewBotAPI(botToken)
 	if err != nil {
 		log.Panic(err)
 	}
 	bot.Debug = true
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-	go http.ListenAndServe(":" + os.Getenv("PORT"), nil)
+	http.ListenAndServe(":" + appPort, nil)
 	log.Printf("Http Listener switched on port %s", os.Getenv("PORT"))
 
 	updates := fetchUpdates(bot)
