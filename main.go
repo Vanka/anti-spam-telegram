@@ -1,10 +1,15 @@
 package main
 
 import (
+	"context"
 	tgbotapi "github.com/Syfaro/telegram-bot-api"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 var stats map[tgbotapi.User]UserStat
@@ -12,6 +17,14 @@ var stats map[tgbotapi.User]UserStat
 func main() {
 	appPort := os.Getenv("PORT")
 	botToken := os.Getenv("BOTTOKEN")
+	mongoURI := os.Getenv("MONGODB_URI")
+
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
+	err = client.Ping(ctx, readpref.Primary())
+	if err != nil {
+		log.Panic(err)
+	}
 
 	stats = make(map[tgbotapi.User]UserStat)
 	bot, err := tgbotapi.NewBotAPI(botToken)
@@ -62,13 +75,17 @@ func processMessage(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
 	stat := stats[user]
 	log.Printf("Stats for %s before processing:", getUserName(stat.User))
 	log.Print(stat)
-	log.Print(message)
+	log.Print(message.Voice)
+
+	if message.Voice != nil {
+		
+	}
 
 	if message.ForwardFrom == nil {
 		if len(stat.LastMessages) > 4 && message.Date - stat.LastMessages[0].Date < 30 || (stat.lastMessage() != nil && message.Date - stat.lastMessage().Date <= 5) {
 			stat.Penalties += 1
 			stat.RelationshipRate *= 0.5
-			msg := tgbotapi.NewMessage(message.Chat.ID, "Вова сероглазый пидр")
+			msg := tgbotapi.NewMessage(message.Chat.ID, "Вова голубоглазый пидр")
 			bot.Send(msg)
 		} else {
 			stat.RelationshipRate *= 1.05
