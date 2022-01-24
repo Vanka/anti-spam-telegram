@@ -1,11 +1,7 @@
 package main
 
 import (
-	"context"
 	tgbotapi "github.com/Syfaro/telegram-bot-api"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
 	"net/http"
 	"os"
