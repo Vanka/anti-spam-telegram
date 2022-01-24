@@ -16,8 +16,11 @@ var stats map[tgbotapi.User]UserStat
 
 func main() {
 	appPort := os.Getenv("PORT")
+	log.Printf("App Port %s", appPort)
 	botToken := os.Getenv("BOTTOKEN")
+	log.Printf("Bot Token %s", botToken)
 	mongoURI := os.Getenv("MONGODB_URI")
+	log.Printf("Mongo Uri %s", mongoURI)
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
