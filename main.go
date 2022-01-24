@@ -23,13 +23,13 @@ func main() {
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
 	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
-		log.Panic(err)
+		log.Panic("Error while creating a client: %s", err)
 	}
 
 	stats = make(map[tgbotapi.User]UserStat)
 	bot, err := tgbotapi.NewBotAPI(botToken)
 	if err != nil {
-		log.Panic(err)
+		log.Panic("Error while making: %s", err)
 	}
 	bot.Debug = true
 	log.Printf("Authorized on account %s", bot.Self.UserName)
