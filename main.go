@@ -49,7 +49,7 @@ func main() {
 }
 
 func fetchUpdates(bot *tgbotapi.BotAPI) tgbotapi.UpdatesChannel {
-	_, err := bot.SetWebhook(tgbotapi.NewWebhook("https://anti-peedrila.herokuapp.com/" + bot.Token))
+	_, err := bot.SetWebhook(tgbotapi.NewWebhook("https://anti-peedrila-765923146deb.herokuapp.com/" + bot.Token))
 	if err != nil {
 		log.Panic(err)
 	}
